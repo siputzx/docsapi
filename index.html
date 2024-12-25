@@ -132,7 +132,7 @@
 
         const renderEndpoints = async () => {
             try {
-                const response = await fetch('/list');
+                const response = await fetch('https://api.siputzx.my.id/list');
                 const data = await response.json();
                 loadingIndicator.style.display = 'none';
 
