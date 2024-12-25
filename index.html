@@ -159,9 +159,7 @@
                         const endpointEl = document.createElement('div');
                         endpointEl.className = `px-4 py-3 flex justify-between items-center hover:bg-gray-50 dark:hover:bg-gray-800 ${index < section.endpoints.length - 1 ? 'border-b dark:border-gray-800' : ''}`;
                         
-                        const href = endpoint.example === '-' 
-                            ? endpoint.path 
-                            : `${endpoint.path}?${endpoint.example}`;
+                        const href = `https://api.siputzx.my.id${endpoint.path}${endpoint.example === '-' ? '' : `?${endpoint.example}`}`;
 
                         endpointEl.innerHTML = `
                             <div class="flex items-center space-x-3">
