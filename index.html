@@ -1,410 +1,213 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Siputzx || API</title>
-    <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@300;400;700&display=swap" rel="stylesheet">
+    <title>Siputzx API</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.3/howler.min.js"></script>
-    <link rel="manifest" href="/manifest.json">
     <link rel="icon" href="/favicon.png" type="image/png">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="manifest" href="/manifest.json">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            'primary': '#3B82F6',
+                            'secondary': '#2563EB'
+                        }
+                    },
+                    animation: {
+                        'theme-pulse': 'pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite'
+                    },
+                    keyframes: {
+                        pulse: {
+                            '0%, 100%': { transform: 'scale(1)' },
+                            '50%': { transform: 'scale(1.05)' }
+                        }
+                    }
+                }
+            }
+        }
+    </script>
     <style>
-        :root {
-            --bg-dark: #0a0e1f;
-            --accent-blue: #3399ff;
-            --accent-blue-dark: #1155cc;
-            --grid-color: rgba(51, 153, 255, 0.1);
+        * { 
+            scroll-behavior: smooth;
+            -webkit-tap-highlight-color: transparent;
         }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
         body {
-            font-family: 'Chakra Petch', monospace;
-            background-color: var(--bg-dark);
-            color: white;
-            overflow: hidden;
+            font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
         }
-
-        .grid-overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-image: 
-                linear-gradient(0deg, transparent 24%, var(--grid-color) 25%, var(--grid-color) 26%, transparent 27%, transparent 74%, var(--grid-color) 75%, var(--grid-color) 76%, transparent 77%, transparent),
-                linear-gradient(90deg, transparent 24%, var(--grid-color) 25%, var(--grid-color) 26%, transparent 27%, transparent 74%, var(--grid-color) 75%, var(--grid-color) 76%, transparent 77%, transparent);
-            background-size: 30px 30px;
-            opacity: 0.2;
-            z-index: 1;
+        .smooth-transition {
+            transition: all 0.3s ease-in-out;
         }
-
-        .security-container {
-            position: relative;
-            background: rgba(10, 14, 31, 0.8);
-            border: 2px solid var(--accent-blue-dark);
-            backdrop-filter: blur(10px);
-            box-shadow: 
-                0 0 30px rgba(51, 153, 255, 0.2),
-                0 15px 30px rgba(0, 0, 0, 0.4);
+        .endpoint-hover {
+            transition: transform 0.2s, box-shadow 0.2s;
         }
-
-        .glitch-text {
-            position: relative;
-            text-shadow: 
-                0 0 5px var(--accent-blue),
-                1px 1px var(--accent-blue),
-                -1px -1px var(--accent-blue-dark);
-            animation: glitch 1s infinite alternate;
-        }
-
-        @keyframes glitch {
-            0% { transform: translate(0); }
-            20% { transform: translate(-1px, 1px); }
-            40% { transform: translate(-1px, -1px); }
-            60% { transform: translate(1px, 1px); }
-            80% { transform: translate(1px, -1px); }
-            100% { transform: translate(0); }
-        }
-
-        .music-player {
-            background: rgba(51, 153, 255, 0.1);
-            border: 1px solid var(--accent-blue-dark);
-            border-radius: 10px;
-            padding: 10px;
-            margin-top: 15px;
-        }
-
-        .music-controls {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-        }
-
-        .play-button {
-            width: 35px;
-            height: 35px;
-            border-radius: 50%;
-            background: var(--accent-blue);
-            border: none;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.3s ease;
-        }
-
-        .play-button:hover {
-            transform: scale(1.1);
-            background: var(--accent-blue-dark);
-        }
-
-        .volume-slider {
-            width: 80px;
-            height: 3px;
-            accent-color: var(--accent-blue);
-        }
-
-        .progress-bar {
-            width: 100%;
-            height: 3px;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 1.5px;
-            margin-top: 8px;
-            overflow: hidden;
-        }
-
-        .progress {
-            width: 0%;
-            height: 100%;
-            background: var(--accent-blue);
-            transition: width 0.1s linear;
-        }
-
-        .tqto-section {
-            margin-top: 20px;
-            padding-top: 15px;
-            border-top: 1px solid rgba(51, 153, 255, 0.2);
-        }
-
-        .tqto-title {
-            font-size: 0.9em;
-            color: var(--accent-blue);
-            margin-bottom: 8px;
-            font-weight: 700;
-        }
-
-        .contributors {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-            justify-content: center;
-        }
-
-        .contributor {
-            background: rgba(51, 153, 255, 0.1);
-            padding: 4px 12px;
-            border-radius: 15px;
-            font-size: 0.8em;
-            color: rgba(255, 255, 255, 0.9);
-            border: 1px solid rgba(51, 153, 255, 0.3);
-            transition: all 0.3s ease;
-            text-decoration: none;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-        }
-
-        .contributor:hover {
-            background: rgba(51, 153, 255, 0.2);
-            transform: translateY(-2px);
-        }
-
-        .contributor i {
-            font-size: 0.9em;
-        }
-        
-        .contributor.special {
-            background: linear-gradient(45deg, rgba(51, 153, 255, 0.2), rgba(51, 153, 255, 0.3));
-            border: 1px solid rgba(51, 153, 255, 0.5);
-            padding: 6px 16px;
-            font-weight: 500;
-            box-shadow: 0 2px 10px rgba(51, 153, 255, 0.1);
-            animation: pulse 2s infinite;
-        }
-
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-            100% { transform: scale(1); }
-        }
-
-        .contributor.special i {
-            animation: rotate 3s linear infinite;
-        }
-
-        @keyframes rotate {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+        .endpoint-hover:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1);
         }
     </style>
 </head>
-<body class="min-h-screen flex items-center justify-center relative overflow-hidden">
-    <div class="grid-overlay"></div>
-
-    <div class="container mx-auto px-4 relative z-10">
-        <div class="security-container rounded-2xl max-w-sm mx-auto p-6 text-center -mt-10">
-            <div class="mb-4">
-                <img src="https://avatars.githubusercontent.com/u/154863645?v=4" 
-                     class="h-24 w-24 mx-auto rounded-full border-2 border-blue-600"
-                     alt="Siputzx Logo">
+<body class="bg-white dark:bg-[#0A0A0A] text-gray-800 dark:text-gray-200 min-h-screen flex flex-col">
+    <div class="container mx-auto max-w-3xl px-4 py-8 flex-grow">
+        <header class="flex justify-between items-center mb-8">
+            <div class="flex items-center space-x-3">
+                <h1 class="text-2xl font-bold text-brand-primary dark:text-brand-primary">
+                    Siputzx API
+                </h1>
             </div>
-
-            <h1 class="text-2xl font-bold mb-3 glitch-text text-blue-500">
-                Welcome to API
-            </h1>
-
-            <p class="text-gray-300 mb-4 opacity-80 text-sm">
-                This API was created by siputzx production and assisted by my friends. I am very grateful to all who have contributed to making this API.
-            </p>
-
-            <div class="music-player">
-                <div class="music-controls">
-                    <button class="play-button" id="playBtn" onclick="togglePlay()">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="white">
-                            <path d="M8 5v14l11-7z"/>
-                        </svg>
-                    </button>
-                    <input type="range" class="volume-slider" min="0" max="100" value="100" oninput="updateVolume(this.value)">
+            <button id="theme-toggle" class="p-2 rounded-full smooth-transition hover:bg-gray-100 dark:hover:bg-gray-800">
+                <div class="relative w-6 h-6">
+                    <svg id="sun-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="absolute inset-0 w-full h-full text-yellow-500 dark:text-gray-500 smooth-transition transform dark:rotate-180 dark:scale-0">
+                        <circle cx="12" cy="12" r="5" fill="currentColor"/>
+                        <line x1="12" y1="1" x2="12" y2="3" stroke="currentColor" stroke-width="2"/>
+                        <line x1="12" y1="21" x2="12" y2="23" stroke="currentColor" stroke-width="2"/>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" stroke="currentColor" stroke-width="2"/>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" stroke="currentColor" stroke-width="2"/>
+                        <line x1="1" y1="12" x2="3" y2="12" stroke="currentColor" stroke-width="2"/>
+                        <line x1="21" y1="12" x2="23" y2="12" stroke="currentColor" stroke-width="2"/>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" stroke="currentColor" stroke-width="2"/>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" stroke="currentColor" stroke-width="2"/>
+                    </svg>
+                    <svg id="moon-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="absolute inset-0 w-full h-full text-gray-800 dark:text-yellow-300 smooth-transition transform dark:rotate-0 dark:scale-100 rotate-180 scale-0">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" fill="currentColor"/>
+                    </svg>
                 </div>
-                <div class="progress-bar">
-                    <div class="progress" id="progress"></div>
-                </div>
+            </button>
+        </header>
+
+        <main id="api-content" class="space-y-6">
+            <div class="bg-gray-50 dark:bg-[#1E1E1E] p-4 rounded-lg text-center">
+                <p class="text-gray-600 dark:text-gray-300 max-w-xl mx-auto">
+                    Fast, Powerful, and Easy – Drive Innovation, Increase Efficiency, and Build Your Program with Unlimited Scalability
+                </p>
             </div>
 
-            <div class="flex flex-col space-y-2 mt-4">
-                <a href="https://whatsapp.com/channel/0029Vaq9pCUEawdzlDYdYF3p" target="_blank" class="w-full py-2 bg-blue-700 hover:bg-blue-800 text-white text-sm rounded-lg transition-all duration-300 transform hover:-translate-y-1 hover:scale-105 text-center">
-                    Saluran WhatsApp
-                </a>
-                
-    <a 
-    id="play-and-go"
-    href="/docs" 
-    class="w-full py-2 bg-white text-blue-800 hover:bg-gray-100 text-sm rounded-lg transition-all duration-300 flex items-center justify-center gap-2"
->
-    <i class="fas fa-book"></i> Documentation
-</a>
-
-            </div>
-
-            <div class="tqto-section">
-                <div class="tqto-title">Thanks to</div>
-                <div class="contributors">
-                    <a href="https://github.com/YanzBotz" class="contributor" target="_blank">
-                        <i class="fab fa-github"></i>
-                        Yanzdev
-                    </a>
-                    <a href="https://github.com/Rifza123" class="contributor" target="_blank">
-                        <i class="fab fa-github"></i>
-                        Rifza
-                    </a>
-                    <a href="https://github.com/Arifzyn19" class="contributor" target="_blank">
-                        <i class="fab fa-github"></i>
-                        Arifzyn
-                    </a>
-                    <a href="https://github.com/Sanzydev" class="contributor" target="_blank">
-                        <i class="fab fa-github"></i>
-                        Sanzy
-                    </a>
-                    <a href="https://ssateam.my.id" class="contributor" target="_blank">
-                        <i class="fas fa-users"></i>
-                        SSA Team
-                    </a>                    
-                    <a href="https://github.com/shannzx10" class="contributor" target="_blank">
-                        <i class="fab fa-github"></i>
-                        Shannz
-                    </a>
-                    <a href="https://github.com/miftahganzz" class="contributor" target="_blank">
-                        <i class="fab fa-github"></i>
-                        Miftah
-                    </a>
-                    <a href="https://github.com/Arifzyn" class="contributor" target="_blank">
-                        <i class="fab fa-github"></i>
-                        Habibie
-                    </a>
-                    <a href="https://github.com/najmyw" class="contributor" target="_blank">
-                        <i class="fab fa-github"></i>
-                        Najmy
-                    </a>
-                    <a href="https://github.com/kiuur" class="contributor" target="_blank">
-                        <i class="fab fa-github"></i>
-                        Kyuurzy
-                    </a>                    
-                    <a href="https://github.com/hannuniverse" class="contributor" target="_blank">
-                        <i class="fab fa-github"></i>
-                        Hann
-                    </a>                    
-                    <a href="https://github.com/Adhaaz" class="contributor" target="_blank">
-                        <i class="fab fa-github"></i>
-                        Daffa
-                    </a>
-                    <a class="contributor special" target="_blank">
-                        <i class="fas fa-code-branch"></i>
-                        All contribution
-                    </a>
+            <div id="endpoints-container" class="space-y-4">
+                <div id="loading-indicator" class="text-center text-gray-500 dark:text-gray-400">
+                    Loading API Endpoints...
                 </div>
             </div>
-
-            <div class="mt-4 text-xs text-gray-500">
-                © 2024 Siputzx Production
-            </div>
-        </div>
+        </main>
+        
+        <footer class="text-center text-sm text-gray-500 dark:text-gray-400 mt-8 pt-4">
+            <a href="https://siputzx.my.id" target="_blank" class="hover:text-brand-primary transition-colors">
+                © 2024 Siputzx API
+            </a>
+        </footer>
     </div>
+
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            let sound = null;
+        const themeToggle = document.getElementById('theme-toggle');
+        const sunIcon = document.getElementById('sun-icon');
+        const moonIcon = document.getElementById('moon-icon');
+        const endpointsContainer = document.getElementById('endpoints-container');
+        const loadingIndicator = document.getElementById('loading-indicator');
 
-            function initAudio() {
-                sound = new Howl({
-                    src: ['/Kerosene.mp3'],
-                    loop: true,
-                    volume: 1.0,
-                    html5: true,
-                    preload: true,
-                    onload: function() {
-                        console.log('Audio berhasil dimuat');
-                    },
-                    onloaderror: function(id, err) {
-                        console.error('Error loading audio:', err);
-                    },
-                    onplay: function() {
-                        requestAnimationFrame(updateProgress);
-                        updatePlayButton(true);
-                    },
-                    onpause: function() {
-                        updatePlayButton(false);
-                    },
-                    onstop: function() {
-                        updatePlayButton(false);
-                    }
+        const toggleTheme = () => {
+            document.documentElement.classList.toggle('dark');
+            sunIcon.classList.toggle('rotate-180');
+            sunIcon.classList.toggle('scale-0');
+            moonIcon.classList.toggle('rotate-0');
+            moonIcon.classList.toggle('scale-100');
+            localStorage.setItem('theme', document.documentElement.classList.contains('dark') ? 'dark' : 'light');
+        };
+        
+        themeToggle.addEventListener('click', toggleTheme);
+
+        const getMethodColor = (method) => {
+            const colors = {
+                'GET': 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300',
+                'POST': 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300',
+                'PUT': 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300',
+                'DELETE': 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300',
+                'PATCH': 'bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-300'
+            };
+            return colors[method.toUpperCase()] || 'bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-300';
+        };
+
+        const renderEndpoints = async () => {
+            try {
+                const response = await fetch('/list');
+                const data = await response.json();
+                loadingIndicator.style.display = 'none';
+
+                Object.keys(data.routes).forEach(sectionKey => {
+                    const section = data.routes[sectionKey];
+                    
+                    const sectionEl = document.createElement('div');
+                    sectionEl.className = 'bg-white dark:bg-[#1E1E1E] rounded-lg shadow-sm dark:shadow-none border dark:border-gray-800 endpoint-hover';
+
+                    const headerEl = document.createElement('div');
+                    headerEl.className = 'px-4 py-3 border-b dark:border-gray-800 flex justify-between items-center';
+                    headerEl.innerHTML = `
+                        <h2 class="text-base font-semibold text-brand-primary">
+                            ${section.title}
+                        </h2>
+                        <span class="text-xs text-gray-500 bg-gray-100 dark:bg-gray-900 px-2 py-1 rounded">
+                            ${section.endpoints.length} Endpoints
+                        </span>
+                    `;
+                    sectionEl.appendChild(headerEl);
+
+                    const endpointsEl = document.createElement('div');
+                    section.endpoints.forEach((endpoint, index) => {
+                        const endpointEl = document.createElement('div');
+                        endpointEl.className = `px-4 py-3 flex justify-between items-center hover:bg-gray-50 dark:hover:bg-gray-800 ${index < section.endpoints.length - 1 ? 'border-b dark:border-gray-800' : ''}`;
+                        
+                        const href = endpoint.example === '-' 
+                            ? endpoint.path 
+                            : `${endpoint.path}?${endpoint.example}`;
+
+                        endpointEl.innerHTML = `
+                            <div class="flex items-center space-x-3">
+                                <span class="text-xs font-medium uppercase px-2 py-1 rounded ${getMethodColor(endpoint.method)}">
+                                    ${endpoint.method}
+                                </span>
+                                <span class="text-sm">
+                                    ${endpoint.name}
+                                </span>
+                            </div>
+                            <div class="flex items-center space-x-2">
+                                <a 
+                                    href="${href}"
+                                    target="_blank"
+                                    class="px-3 py-1 bg-brand-primary text-white text-xs rounded-full hover:bg-brand-secondary transition-colors"
+                                >
+                                    Try
+                                </a>
+                            </div>
+                        `;
+                        
+                        endpointsEl.appendChild(endpointEl);
+                    });
+
+                    sectionEl.appendChild(endpointsEl);
+                    endpointsContainer.appendChild(sectionEl);
                 });
+            } catch (error) {
+                console.error('Error fetching endpoints:', error);
+                loadingIndicator.style.display = 'none';
+                endpointsContainer.innerHTML = `
+                    <div class="text-red-500 text-center py-4">
+                        Failed to load endpoints. Please try again later.
+                    </div>
+                `;
             }
-            
-            initAudio();
+        };
+        
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme === 'dark') {
+            document.documentElement.classList.add('dark');
+            sunIcon.classList.add('rotate-180', 'scale-0');
+            moonIcon.classList.add('rotate-0', 'scale-100');
+        }
 
-            function updatePlayButton(isPlaying) {
-                const playBtn = document.getElementById('playBtn');
-                if (isPlaying) {
-                    playBtn.innerHTML = `
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="white">
-                            <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>
-                        </svg>
-                    `;
-                } else {
-                    playBtn.innerHTML = `
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="white">
-                            <path d="M8 5v14l11-7z"/>
-                        </svg>
-                    `;
-                }
-            }
-            
-
-    document.getElementById("play-and-go").addEventListener("click", function (event) {
-        const audios = [
-            '/random/1.mp3',
-            '/random/2.mp3',
-            '/random/3.mp3',
-            '/random/4.mp3',
-            '/random/5.mp3'            
-        ];
-        const randomIndex = Math.floor(Math.random() * audios.length);
-        const selectedAudio = audios[randomIndex];
-
-        localStorage.setItem("randomAudio", selectedAudio);
-        localStorage.setItem("delayPlayAudio", true);
-    });
-            
-            window.togglePlay = function() {
-                if (!sound) return;
-                
-                if (sound.playing()) {
-                    sound.pause();
-                } else {
-                    sound.play();
-                }
-            };
-            
-            window.updateVolume = function(value) {
-                if (!sound) return;
-                sound.volume(value / 100);
-            };
-
-if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('/sw.js').then(registration => {
-        console.log('Service Worker registered:', registration);
-    }).catch(error => {
-        console.error('Service Worker registration failed:', error);
-    });
-}
-
-            function updateProgress() {
-                if (!sound) return;
-                
-                if (sound.playing()) {
-                    const progress = (sound.seek() / sound.duration()) * 100;
-                    document.getElementById('progress').style.width = `${progress}%`;
-                    requestAnimationFrame(updateProgress);
-                }
-            }
-        });
+        renderEndpoints();
     </script>
 </body>
-                  </html>
+</html>
